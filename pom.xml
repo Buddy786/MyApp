@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>mvw-cas-mdm-client</artifactId>
+	<name>mvw-cas-mdm-client</name>
+
+	<parent>
+		<groupId>mvw-cas-mdm-services</groupId>
+		<artifactId>mvw-cas-mdm-services</artifactId>
+		<version>0.0.1</version>
+		<relativePath>../mvw-cas-mdm-services/pom.xml</relativePath>
+	</parent>
+
+
+	<properties>
+		<cxf.xjc.version>3.1.0</cxf.xjc.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.cxf.xjcplugins</groupId>
+			<artifactId>cxf-xjc-ts</artifactId>
+			<version>${cxf.xjc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf.xjc-utils</groupId>
+			<artifactId>cxf-xjc-runtime</artifactId>
+			<version>${cxf.xjc.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<defaultGoal>wsdl2java</defaultGoal>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<compilerVersion>${maven.compiler.target}</compilerVersion>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-MVWComposite</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${basedir}/src/main/java</sourceRoot>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/MVWComposites.wsdl</wsdl>
+									<outputDir>${basedir}/src/main/java</outputDir>
+									<extraargs>
+										<extraarg>-verbose</extraarg>
+										<extraarg>-server</extraarg>
+										<extraarg>-autoNameResolution</extraarg>
+										<extraarg>-xjc-npa</extraarg>
+										<extraarg>-impl</extraarg>
+									</extraargs>
+								</wsdlOption>
+
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/Party.wsdl</wsdl>
+									<outputDir>${basedir}/src/main/java</outputDir>
+									<extraargs>
+										<extraarg>-verbose</extraarg>
+										<extraarg>-server</extraarg>
+										<extraarg>-autoNameResolution</extraarg>
+										<!--  extraarg>-xjc-b,${basedir}/src/main/jaxb/bindings.xml</extraarg -->
+										<extraarg>-xjc-npa</extraarg>
+										<extraarg>-impl</extraarg>
+									</extraargs>
+								</wsdlOption>
+
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
